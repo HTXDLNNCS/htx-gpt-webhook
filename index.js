@@ -14,14 +14,14 @@ app.post('/webhook', async (req, res) => {
   async function handleGPT(agent) {
     const prompt = agent.query;
 
-    // 📌 In ra biến môi trường để kiểm tra
+    // ✅ In ra key để kiểm tra Railway có đọc đúng không
     console.log("🔍 OPENAI_API_KEY:", process.env.OPENAI_API_KEY);
 
     try {
       const response = await axios.post(
         "https://api.openai.com/v1/chat/completions",
         {
-          model: "gpt-4",
+          model: "gpt-4o",
           messages: [
             {
               role: "system",
@@ -44,7 +44,7 @@ app.post('/webhook', async (req, res) => {
       const reply = response.data.choices[0].message.content.trim();
       agent.add(reply);
     } catch (error) {
-      console.error("❌ Lỗi gọi OpenAI:", error?.response?.data || error.message);
+      console.error("❌ Lỗi gọi OpenAI:", error?.response?.data || error.message || error);
       agent.add("Xin lỗi, hiện tại tôi không thể kết nối đến GPT. Bạn vui lòng thử lại sau.");
     }
   }
